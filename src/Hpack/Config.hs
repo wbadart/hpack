@@ -16,6 +16,7 @@ module Hpack.Config (
   packageConfig
 , readPackageConfig
 , readPackageConfigWith
+, getUserDataDirectory
 , renamePackage
 , packageDependencies
 , package
@@ -508,8 +509,13 @@ type Errors = ExceptT String
 decodeYaml :: FromValue a => FilePath -> Warnings (Errors IO) a
 decodeYaml file = lift (ExceptT $ Yaml.decodeYaml file) >>= decodeValue file
 
-readPackageConfig :: FilePath -> FilePath -> IO (Either String (Package, [String]))
-readPackageConfig = readPackageConfigWith Yaml.decodeYaml
+readPackageConfig :: FilePath -> IO (Either String (Package, [String]))
+readPackageConfig file = do
+  userDataDir <- getUserDataDirectory
+  readPackageConfigWith Yaml.decodeYaml userDataDir file
+
+getUserDataDirectory :: IO FilePath
+getUserDataDirectory = getAppUserDataDirectory "hpack"
 
 readPackageConfigWith :: (FilePath -> IO (Either String Value)) -> FilePath -> FilePath -> IO (Either String (Package, [String]))
 readPackageConfigWith readValue userDataDir file = runExceptT $ runWriterT $ do

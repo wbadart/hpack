@@ -18,7 +18,8 @@ import           Data.String.Interpolate
 import           Data.String.Interpolate.Util
 
 import qualified Hpack.Run as Hpack
-import           Hpack.Config (packageConfig, readPackageConfig)
+import           Hpack.Yaml (decodeYaml)
+import           Hpack.Config (packageConfig, readPackageConfigWith)
 import           Hpack.FormattingHints (FormattingHints(..), sniffFormattingHints)
 
 writeFile :: FilePath -> String -> IO ()
@@ -1165,7 +1166,7 @@ run c old = run_ c old >>= either assertFailure return
 
 run_ :: FilePath -> String -> IO (Either String ([String], String))
 run_ c old = do
-  mPackage <- readPackageConfig "" c
+  mPackage <- readPackageConfigWith decodeYaml "" c
   return $ case mPackage of
     Right (pkg, warnings) ->
       let

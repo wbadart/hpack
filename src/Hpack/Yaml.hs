@@ -4,7 +4,7 @@ module Hpack.Yaml where
 import           Data.Yaml hiding (decodeFile, decodeFileEither)
 import           Data.Yaml.Include
 
-decodeYaml :: FilePath -> IO (Either String Value)
+decodeYaml :: FromJSON a => FilePath -> IO (Either String a)
 decodeYaml file = do
   result <- decodeFileEither file
   return $ either (Left . errToString) Right result

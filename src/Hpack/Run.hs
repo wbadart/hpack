@@ -30,7 +30,6 @@ import           Data.Maybe
 import           Data.List
 import           System.Exit
 import           System.FilePath
-import           System.Directory
 import           Data.Version
 import           Data.Map.Lazy (Map)
 import qualified Data.Map.Lazy as Map
@@ -55,7 +54,7 @@ defaultRunOptions = RunOptions Nothing packageConfig decodeYaml
 run :: RunOptions -> IO ([String], FilePath, String)
 run (RunOptions mDir c decode) = do
   let dir = fromMaybe "" mDir
-  userDataDir <- getAppUserDataDirectory "hpack"
+  userDataDir <- getUserDataDirectory
   mPackage <- readPackageConfigWith decode userDataDir (dir </> c)
   case mPackage of
     Right (pkg, warnings) -> do
