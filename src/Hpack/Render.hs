@@ -331,7 +331,7 @@ renderDependencies name deps = [
 renderDependency :: (String, DependencyInfo) -> (String, [String])
 renderDependency (name, DependencyInfo mixins version) = (
       name ++ renderVersion version
-    , [ name ++ " " ++ mixin | mixin <- mixins ]
+    , mixins
     )
 
 renderVersion :: DependencyVersion -> String
